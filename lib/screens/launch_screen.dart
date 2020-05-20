@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/models/weather.dart';
 import 'package:weather/services/weather_helper.dart';
@@ -152,7 +153,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
-                                          snapshot.data.location.city,
+                                          snapshot.data.location.city
+                                              .toUpperCase(),
                                           style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold,
@@ -163,10 +165,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
                                           height: 5,
                                         ),
                                         Text(
-                                          snapshot.data.location.country
-                                              .toUpperCase(),
+                                          snapshot.data.location.country,
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w400,
                                             color: Colors.white,
                                           ),
@@ -190,7 +191,10 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       ),
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return SpinKitPulse(
+                      color: Color(0xffD6A9A7),
+                      size: 70.0,
+                    );
                   }
                 },
               ),
@@ -234,7 +238,10 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       ),
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return SpinKitPulse(
+                      color: Colors.lightBlueAccent,
+                      size: 70.0,
+                    );
                   }
                 },
               ),
@@ -291,8 +298,6 @@ class _LaunchScreenState extends State<LaunchScreen> {
               Radius.circular(15.0),
             ),
           ),
-//          hintText: 'Address...',
-//                      onSubmitted: (String place) {},
         ),
       ),
     ));
@@ -320,7 +325,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            weather[index].location.city,
+                            weather[index].location.city.toUpperCase(),
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
@@ -328,9 +333,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
                             ),
                           ),
                           Text(
-                            weather[index].location.country.toUpperCase(),
+                            weather[index].location.country,
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.w400,
                               color: Colors.white,
                             ),
