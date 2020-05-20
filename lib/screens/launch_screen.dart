@@ -48,14 +48,13 @@ class _LaunchScreenState extends State<LaunchScreen> {
   }
 
   void saveLocation(String address) async {
-    if (address != null) {
-      Weather weather = await WeatherHelper().getAddressWeather(address);
+    if (address.isNotEmpty) {
+      Weather weather = await WeatherHelper().getWeatherFromAddress(address);
       this.locations.add({
         'lat': weather.location.latitude,
         'long': weather.location.longitude
       });
 
-//    prefs.setString('locations', jsonEncode([]));
       prefs.setString('locations', jsonEncode(locations));
 
       //Reload listview
@@ -71,7 +70,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
     for (var location in locations) {
       Weather weather = await WeatherHelper()
-          .getCoordinatesWeather(location['lat'], location['long']);
+          .getWeatherFromCoordinates(location['lat'], location['long']);
       weatherList.add(weather);
     }
 
@@ -133,6 +132,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                       child: Container(
                         height: 120,
                         child: Card(
+                          shadowColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -223,7 +223,6 @@ class _LaunchScreenState extends State<LaunchScreen> {
                           return GestureDetector(
                             child: locationItem(snapshot.data, index),
                             onTap: () {
-//                            print(locations[index]['city'] + ' clicked');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -309,6 +308,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
         Container(
           height: 120,
           child: Card(
+            shadowColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),

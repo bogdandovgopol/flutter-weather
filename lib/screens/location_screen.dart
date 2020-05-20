@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:weather/utils/constants.dart';
+import 'package:weather/services/weather_helper.dart';
 
 class LocationScreen extends StatefulWidget {
-  LocationScreen({this.locationWeather});
+  LocationScreen({this.weather});
 
-  final locationWeather;
+  final weather;
 
   @override
   _LocationScreenState createState() => _LocationScreenState();
@@ -15,66 +15,82 @@ class _LocationScreenState extends State<LocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/location_background.jpg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.8), BlendMode.dstATop),
-          ),
-        ),
+        color: WeatherHelper().getWeatherColor(widget.weather.temp),
         constraints: BoxConstraints.expand(),
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.near_me,
-                      size: 50.0,
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.location_city,
-                      size: 50.0,
-                    ),
-                  ),
-                ],
+              Text(
+                '${widget.weather.temp}°',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 130,
+                ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Row(
+              Text(
+                '${widget.weather.location.city}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 45,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      '32°',
-                      style: kTempTextStyle,
+                    weatherCard(
+                      title: 'Humidity',
+                      value: '${widget.weather.humidity}%',
                     ),
-                    Text(
-                      '☀️',
-                      style: kConditionTextStyle,
+                    weatherCard(
+                      title: 'Pressure',
+                      value: '${widget.weather.pressure} hPa',
+                    ),
+                    weatherCard(
+                      title: 'Wind',
+                      value: '${widget.weather.windSpeed} km/h',
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: Text(
-                  "It's 🍦 time in San Francisco!",
-                  textAlign: TextAlign.right,
-                  style: kMessageTextStyle,
-                ),
-              ),
+              )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Card weatherCard({@required String title, @required String value}) {
+    return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 18,
+                ),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }

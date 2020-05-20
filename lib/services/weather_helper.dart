@@ -18,7 +18,7 @@ class WeatherHelper {
     return weather;
   }
 
-  Future<Weather> getAddressWeather(String address) async {
+  Future<Weather> getWeatherFromAddress(String address) async {
     LocationHelper locationHelper = LocationHelper();
     Location location = await locationHelper.getLocationFromAddress(address);
 
@@ -30,7 +30,7 @@ class WeatherHelper {
     return weather;
   }
 
-  Future<Weather> getCoordinatesWeather(double lat, double long) async {
+  Future<Weather> getWeatherFromCoordinates(double lat, double long) async {
     LocationHelper locationHelper = LocationHelper();
     Location location =
         await locationHelper.getLocationFromCoordinates(lat, long);
@@ -43,29 +43,12 @@ class WeatherHelper {
     return weather;
   }
 
-  String getWeatherIcon(int condition) {
-    //TODO: CHECK WEATHER CONDITION AND SHOW ICON
-  }
-
-  String getMessage(int temp) {
-    if (temp > 25) {
-      return 'Hot';
-    } else if (temp > 20) {
-      return 'Warm';
-    } else if (temp < 10) {
-      return 'Cold';
-    } else {
-      return 'Freezing cold';
-    }
-  }
-
   Color getWeatherColor(int temp) {
-    print(temp);
     if (temp > 30) {
       return Colors.redAccent;
     } else if (temp > 25) {
       return Colors.orangeAccent;
-    } else if (temp > 20) {
+    } else if (temp > 18) {
       return Colors.amberAccent;
     } else if (temp > 10) {
       return Colors.lightBlueAccent;
