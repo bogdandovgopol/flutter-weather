@@ -3,9 +3,7 @@ import 'package:weather/models/location.dart';
 import 'package:weather/models/weather.dart';
 import 'package:weather/services/location_helper.dart';
 import 'package:weather/services/network_helper.dart';
-
-const apiKey = '44d0d14f66af51d18939b280758d7eec';
-const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+import 'package:weather/utils/constants.dart';
 
 class WeatherHelper {
   Future<Weather> getCurrentLocationWeather() async {
@@ -62,11 +60,14 @@ class WeatherHelper {
   }
 
   Color getWeatherColor(int temp) {
-    if (temp > 25) {
+    print(temp);
+    if (temp > 30) {
       return Colors.redAccent;
-    } else if (temp > 20) {
+    } else if (temp > 25) {
       return Colors.orangeAccent;
-    } else if (temp < 10) {
+    } else if (temp > 20) {
+      return Colors.amberAccent;
+    } else if (temp > 10) {
       return Colors.lightBlueAccent;
     } else {
       return Colors.blueAccent;
