@@ -122,7 +122,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color: WeatherHelper().getWeatherColor(20),
+                        color:
+                            WeatherHelper().getWeatherColor(snapshot.data.temp),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -279,7 +280,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        color: WeatherHelper().getWeatherColor(20),
+        color: WeatherHelper().getWeatherColor(weather[index].temp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
