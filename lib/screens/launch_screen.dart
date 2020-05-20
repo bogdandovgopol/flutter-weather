@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/models/weather.dart';
@@ -79,172 +80,185 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        // To make Status bar icons color white in Android devices.
+        statusBarIconBrightness: Brightness.dark,
+        // statusBarBrightness is used to set Status bar icon color in iOS.
+        statusBarBrightness: Brightness.light
+        // Here light means dark color Status bar icons.
+        ));
+
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 30, 0, 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    searchButton(),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    searchInput()
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(5, 0, 0, 18),
-                  child: Text(
-                    'Current Location',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black26,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              FutureBuilder(
-                future: currentWeather,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LocationScreen(
-                              weather: snapshot.data,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 120,
-                        child: Card(
-                          shadowColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          color: WeatherHelper()
-                              .getWeatherColor(snapshot.data.temp),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 40, 20, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          snapshot.data.location.city
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          snapshot.data.location.country,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Text(
-                                      '${snapshot.data.temp}°',
-                                      style: TextStyle(
-                                        fontSize: 45,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: Container(
+            margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 30, 0, 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      searchButton(),
+                      SizedBox(
+                        width: 10,
                       ),
-                    );
-                  } else {
-                    return SpinKitPulse(
-                      color: Colors.lightBlueAccent,
-                      size: 70.0,
-                    );
-                  }
-                },
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(5, 30, 0, 18),
-                  child: Text(
-                    'Added Location',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black26,
-                        fontWeight: FontWeight.w500),
+                      searchInput()
+                    ],
                   ),
                 ),
-              ),
-              FutureBuilder(
-                future: getWeatherList(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount:
-                            snapshot.data == null ? 0 : snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            child: locationItem(snapshot.data, index),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LocationScreen(
-                                    weather: snapshot.data[index],
-                                  ),
-                                ),
-                              );
-                            },
+                SizedBox(
+                  height: 30,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(5, 0, 0, 18),
+                    child: Text(
+                      'Current Location',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black26,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                FutureBuilder(
+                  future: currentWeather,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LocationScreen(
+                                weather: snapshot.data,
+                              ),
+                            ),
                           );
                         },
-                      ),
-                    );
-                  } else {
-                    return SpinKitPulse(
-                      color: Colors.lightBlueAccent,
-                      size: 70.0,
-                    );
-                  }
-                },
-              ),
-            ],
+                        child: Container(
+                          height: 120,
+                          child: Card(
+                            shadowColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: WeatherHelper()
+                                .getWeatherColor(snapshot.data.temp),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 40, 20, 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            snapshot.data.location.city
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            snapshot.data.location.country,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Text(
+                                        '${snapshot.data.temp}°',
+                                        style: TextStyle(
+                                          fontSize: 45,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SpinKitPulse(
+                        color: Colors.lightBlueAccent,
+                        size: 70.0,
+                      );
+                    }
+                  },
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(5, 30, 0, 18),
+                    child: Text(
+                      'Added Location',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black26,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                FutureBuilder(
+                  future: getWeatherList(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount:
+                              snapshot.data == null ? 0 : snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              child: locationItem(snapshot.data, index),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LocationScreen(
+                                      weather: snapshot.data[index],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return SpinKitPulse(
+                        color: Colors.lightBlueAccent,
+                        size: 70.0,
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
