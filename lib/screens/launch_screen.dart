@@ -125,7 +125,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => LocationScreen(
-                              locationWeather: snapshot.data,
+                              weather: snapshot.data,
                             ),
                           ),
                         );
@@ -192,7 +192,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                     );
                   } else {
                     return SpinKitPulse(
-                      color: Color(0xffD6A9A7),
+                      color: Colors.lightBlueAccent,
                       size: 70.0,
                     );
                   }
@@ -228,7 +228,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => LocationScreen(
-                                    locationWeather: snapshot.data[index],
+                                    weather: snapshot.data[index],
                                   ),
                                 ),
                               );
