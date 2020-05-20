@@ -41,6 +41,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
   void loadLocations() async {
     prefs = await SharedPreferences.getInstance();
+//    prefs.setString('locations', jsonEncode([]));
     this.locations = jsonDecode(prefs.getString('locations'));
   }
 
@@ -80,6 +81,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         // To make Status bar icons color white in Android devices.
         statusBarIconBrightness: Brightness.dark,
