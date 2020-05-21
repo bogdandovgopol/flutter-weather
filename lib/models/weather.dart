@@ -2,29 +2,35 @@ import 'location.dart';
 
 class Weather {
   Location location;
+  String summary;
+  String icon;
   int temp;
-  int condition;
   int pressure;
   int humidity;
-  int windSpeed;
+  double windSpeed;
+  int uvIndex;
 
   Weather({
     this.location,
+    this.summary,
+    this.icon,
     this.temp,
-    this.condition,
     this.pressure,
     this.humidity,
     this.windSpeed,
+    this.uvIndex,
   });
 
   factory Weather.fromJson(Location location, dynamic json) {
     return Weather(
       location: location,
-      temp: json['main']['temp'].floor(),
-      condition: json['weather'][0]['id'],
-      pressure: json['main']['pressure'],
-      humidity: json['main']['humidity'],
-      windSpeed: (json['wind']['speed'] * 3.6).floor(),
+      summary: json['currently']['summary'] ?? "-",
+      icon: json['currently']['icon'] ?? "-",
+      temp: json['currently']['temperature'].floor() ?? 0,
+      pressure: (json['currently']['pressure']).toInt() ?? 0,
+      humidity: (json['currently']['humidity'] * 100).toInt() ?? 0,
+      windSpeed: json['currently']['windSpeed'] ?? 0.0,
+      uvIndex: json['currently']['uvIndex'] ?? 0,
     );
   }
 }

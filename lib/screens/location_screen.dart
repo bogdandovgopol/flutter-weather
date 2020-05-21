@@ -37,11 +37,23 @@ class _LocationScreenState extends State<LocationScreen> {
                   fontSize: 45,
                 ),
               ),
+              Text(
+                '${widget.weather.summary}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 35,
+                ),
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    weatherCard(
+                      title: 'UV',
+                      value: '${widget.weather.uvIndex}',
+                    ),
                     weatherCard(
                       title: 'Humidity',
                       value: '${widget.weather.humidity}%',

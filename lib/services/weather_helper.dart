@@ -11,7 +11,7 @@ class WeatherHelper {
     Location location = await locationHelper.getCurrentLocation();
 
     NetworkHelper networkHelper = NetworkHelper(
-        '$baseUrl?lat=${location.latitude}&lon=${location.longitude}&units=metric&appid=$apiKey');
+        '$baseUrl/$apiKey/${location.latitude},${location.longitude}?units=si&exclude=minutely,hourly,flags');
 
     dynamic data = await networkHelper.getData();
     Weather weather = Weather.fromJson(location, data);
@@ -23,7 +23,7 @@ class WeatherHelper {
     Location location = await locationHelper.getLocationFromAddress(address);
 
     NetworkHelper networkHelper = NetworkHelper(
-        '$baseUrl?lat=${location.latitude}&lon=${location.longitude}&units=metric&appid=$apiKey');
+        '$baseUrl/$apiKey/${location.latitude},${location.longitude}?units=si&exclude=minutely,hourly,flags');
 
     dynamic data = await networkHelper.getData();
     Weather weather = Weather.fromJson(location, data);
@@ -36,7 +36,7 @@ class WeatherHelper {
         await locationHelper.getLocationFromCoordinates(lat, long);
 
     NetworkHelper networkHelper = NetworkHelper(
-        '$baseUrl?lat=${location.latitude}&lon=${location.longitude}&units=metric&appid=$apiKey');
+        '$baseUrl/$apiKey/${location.latitude},${location.longitude}?units=si&exclude=minutely,hourly,flags');
 
     dynamic data = await networkHelper.getData();
     Weather weather = Weather.fromJson(location, data);

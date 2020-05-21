@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 //API
-const apiKey = '44d0d14f66af51d18939b280758d7eec';
-const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const apiKey = 'c09c68c7b21b2f7af2cd4b124f988b75';
+const baseUrl = 'https://api.darksky.net/forecast';
 
 const kTempTextStyle = TextStyle(
   fontFamily: 'Spartan MB',

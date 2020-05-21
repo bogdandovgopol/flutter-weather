@@ -9,8 +9,6 @@ import 'package:weather/services/weather_helper.dart';
 
 import 'location_screen.dart';
 
-const apiKey = '44d0d14f66af51d18939b280758d7eec';
-
 class LaunchScreen extends StatefulWidget {
   @override
   _LaunchScreenState createState() => _LaunchScreenState();
