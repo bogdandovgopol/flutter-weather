@@ -50,7 +50,12 @@ class _LaunchScreenState extends State<LaunchScreen> {
   }
 
   void saveLocation(String address) async {
-    if (address.isNotEmpty) {
+    if (locationSearchTxtController.text.isEmpty) {
+      showAlert("Error adding location", "Location field is empty");
+      return;
+    }
+
+    try {
       Weather weather = await WeatherHelper().getWeatherFromAddress(address);
       this.locations.add({
         'lat': weather.location.latitude,
@@ -63,6 +68,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
       setState(() {
         weatherList = getWeatherList();
       });
+    } catch (e) {
+      showAlert("Error saving location",
+          "Entered location probably does not exist, or you haven't given location permission.");
     }
   }
 
@@ -78,6 +86,29 @@ class _LaunchScreenState extends State<LaunchScreen> {
       return weatherList;
     else
       return null;
+  }
+
+  void showAlert(String title, String content) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text(title),
+            content: new Text(content),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 
   @override
@@ -313,6 +344,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
         child: Container(
       height: 50,
       child: TextField(
+        onSubmitted: (value) {
+          saveLocation(value);
+        },
         controller: locationSearchTxtController,
         decoration: InputDecoration(
           filled: true,
