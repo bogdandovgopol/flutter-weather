@@ -19,7 +19,6 @@ class _LaunchScreenState extends State<LaunchScreen> {
   final locationSearchTxtController = TextEditingController();
   SharedPreferences prefs;
   List<dynamic> locations = [];
-  var currentLocationWeatherData;
   Future<Weather> currentWeather;
   Future<List<Weather>> weatherList;
 
@@ -40,7 +39,6 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
   void loadLocations() async {
     prefs = await SharedPreferences.getInstance();
-//    prefs.setString('locations', jsonEncode([]));
     this.locations = jsonDecode(prefs.getString('locations'));
     setState(() {
       weatherList = getWeatherList();
