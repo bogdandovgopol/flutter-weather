@@ -74,7 +74,10 @@ class _LaunchScreenState extends State<LaunchScreen> {
       weatherList.add(weather);
     }
 
-    return weatherList;
+    if (weatherList.isNotEmpty)
+      return weatherList;
+    else
+      return null;
   }
 
   @override
@@ -220,7 +223,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
                   child: Container(
                     padding: EdgeInsets.fromLTRB(5, 30, 0, 18),
                     child: Text(
-                      'Added Location',
+                      'Added Locations',
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.black26,
@@ -230,9 +233,10 @@ class _LaunchScreenState extends State<LaunchScreen> {
                 ),
                 FutureBuilder(
                   future: weatherList,
+                  // ignore: missing_return
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.connectionState == ConnectionState.done) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.done:
                         return Expanded(
                           child: ListView.builder(
                             itemCount: snapshot.data == null
@@ -255,16 +259,24 @@ class _LaunchScreenState extends State<LaunchScreen> {
                             },
                           ),
                         );
-                      } else {
+                        break;
+                      case ConnectionState.none:
+                        return Container(
+                          child: Text('List is empty'),
+                        );
+                        break;
+                      case ConnectionState.waiting:
                         return SpinKitPulse(
                           color: Colors.lightBlueAccent,
                           size: 70.0,
                         );
-                      }
-                    } else {
-                      return Container(
-                        child: Text('List is empty'),
-                      );
+                        break;
+                      case ConnectionState.active:
+                        return SpinKitPulse(
+                          color: Colors.lightBlueAccent,
+                          size: 70.0,
+                        );
+                        break;
                     }
                   },
                 ),
