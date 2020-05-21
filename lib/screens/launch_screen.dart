@@ -21,6 +21,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
   List<dynamic> locations = [];
   var currentLocationWeatherData;
   Future<Weather> currentWeather;
+  Future<List<Weather>> weatherList;
 
   @override
   void initState() {
@@ -41,6 +42,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
     prefs = await SharedPreferences.getInstance();
 //    prefs.setString('locations', jsonEncode([]));
     this.locations = jsonDecode(prefs.getString('locations'));
+    setState(() {
+      weatherList = getWeatherList();
+    });
   }
 
   void getCurrentWeatherData() async {
@@ -59,15 +63,13 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
       //Reload listview
       setState(() {
-        getWeatherList();
+        weatherList = getWeatherList();
       });
     }
   }
 
   Future<List<Weather>> getWeatherList() async {
-    dynamic locations = jsonDecode(prefs.getString('locations'));
     List<Weather> weatherList = [];
-
     for (var location in locations) {
       Weather weather = await WeatherHelper()
           .getWeatherFromCoordinates(location['lat'], location['long']);
@@ -79,21 +81,25 @@ class _LaunchScreenState extends State<LaunchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //Allow portrait mode only
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    //Change color of statusbar
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         // To make Status bar icons color white in Android devices.
         statusBarIconBrightness: Brightness.dark,
         // statusBarBrightness is used to set Status bar icon color in iOS.
-        statusBarBrightness: Brightness.light
-        // Here light means dark color Status bar icons.
-        ));
+        statusBarBrightness: Brightness.light));
 
-    return Scaffold(
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
+    return GestureDetector(
+      onTap: () {
+        //Hide keyboard on tap outside
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
           child: Container(
             margin: EdgeInsets.fromLTRB(15, 0, 15, 5),
             child: Column(
@@ -225,34 +231,41 @@ class _LaunchScreenState extends State<LaunchScreen> {
                   ),
                 ),
                 FutureBuilder(
-                  future: getWeatherList(),
+                  future: weatherList,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount:
-                              snapshot.data == null ? 0 : snapshot.data.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              child: locationItem(snapshot.data, index),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LocationScreen(
-                                      weather: snapshot.data[index],
+                    if (snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: snapshot.data == null
+                                ? 0
+                                : snapshot.data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                child: locationItem(snapshot.data, index),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LocationScreen(
+                                        weather: snapshot.data[index],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      );
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return SpinKitPulse(
+                          color: Colors.lightBlueAccent,
+                          size: 70.0,
+                        );
+                      }
                     } else {
-                      return SpinKitPulse(
-                        color: Colors.lightBlueAccent,
-                        size: 70.0,
+                      return Container(
+                        child: Text('List is empty'),
                       );
                     }
                   },
