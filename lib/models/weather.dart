@@ -21,7 +21,7 @@ class Weather {
     this.uvIndex,
   });
 
-  factory Weather.fromJson(Location location, dynamic json) {
+  factory Weather.fromJson(Location location, Map json) {
     return Weather(
       location: location,
       summary: json['currently']['summary'] ?? "-",

@@ -40,6 +40,8 @@ class _LaunchScreenState extends State<LaunchScreen> {
   void loadLocations() async {
     prefs = await SharedPreferences.getInstance();
     this.locations = jsonDecode(prefs.getString('locations'));
+
+    //Reload listview
     setState(() {
       weatherList = getWeatherList();
     });
