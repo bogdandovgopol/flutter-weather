@@ -6,6 +6,7 @@ import 'package:weather/services/network_helper.dart';
 import 'package:weather/utils/constants.dart';
 
 class WeatherHelper {
+  //This function gets a weather data from the API using current location's LAT & LONG coordinates
   Future<Weather> getCurrentLocationWeather() async {
     LocationHelper locationHelper = LocationHelper();
     Location location = await locationHelper.getCurrentLocation();
@@ -18,6 +19,7 @@ class WeatherHelper {
     return weather;
   }
 
+  //This function gets a weather data from the API using provided address
   Future<Weather> getWeatherFromAddress(String address) async {
     LocationHelper locationHelper = LocationHelper();
     Location location = await locationHelper.getLocationFromAddress(address);
@@ -30,6 +32,7 @@ class WeatherHelper {
     return weather;
   }
 
+  //This function gets a weather data from the API using provided LAT & LONG coordinates
   Future<Weather> getWeatherFromCoordinates(double lat, double long) async {
     LocationHelper locationHelper = LocationHelper();
     Location location =
@@ -43,6 +46,7 @@ class WeatherHelper {
     return weather;
   }
 
+  //This function returns a color based on provided temperature.
   Color getWeatherColor(int temp) {
     if (temp > 30) {
       return Colors.redAccent;

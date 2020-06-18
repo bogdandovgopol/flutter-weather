@@ -10,6 +10,7 @@ class Weather {
   double windSpeed;
   int uvIndex;
 
+  //constructor, populate the object with provided data
   Weather({
     this.location,
     this.summary,
@@ -21,7 +22,8 @@ class Weather {
     this.uvIndex,
   });
 
-  factory Weather.fromJson(Location location, Map json) {
+  //populate object using JSON data
+  factory Weather.fromJson(Location location, Map<String, dynamic> json) {
     return Weather(
       location: location,
       summary: json['currently']['summary'] ?? "-",

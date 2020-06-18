@@ -7,6 +7,7 @@ class NetworkHelper {
 
   final String url;
 
+  //This function tries to call a GET Request and return JSON
   Future getData() async {
     http.Response response = await http.get(url);
     if (response.statusCode == 200) {
@@ -14,6 +15,7 @@ class NetworkHelper {
       return jsonDecode(data);
     } else {
       print(response.statusCode);
+      return jsonDecode("");
     }
   }
 }

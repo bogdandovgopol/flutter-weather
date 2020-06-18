@@ -37,6 +37,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
     super.dispose();
   }
 
+  // get list locations from the localstorage
   void loadLocations() async {
     prefs = await SharedPreferences.getInstance();
     this.locations = jsonDecode(prefs.getString('locations'));
@@ -47,10 +48,12 @@ class _LaunchScreenState extends State<LaunchScreen> {
     });
   }
 
+  //get current location weather data
   void getCurrentWeatherData() async {
     currentWeather = WeatherHelper().getCurrentLocationWeather();
   }
 
+  //find location based on the provided address and save location to the localstorage
   void saveLocation(String address) async {
     if (locationSearchTxtController.text.isEmpty) {
       showAlert("Error adding location", "Location field is empty");
@@ -76,6 +79,7 @@ class _LaunchScreenState extends State<LaunchScreen> {
     }
   }
 
+  //get list of locations including weather data
   Future<List<Weather>> getWeatherList() async {
     List<Weather> weatherList = [];
     for (var location in locations) {
